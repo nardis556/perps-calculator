@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perps Calc</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <div class="controls">
+      <div class="control-group">
+        <label for="envSelect">Environment</label>
+        <select id="envSelect">
+          <option value="dev">Development</option>
+          <option value="staging">Staging</option>
+          <option value="sandbox">Sandbox</option>
+          <option value="prod">Production</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label for="totalDeposits">Total Deposits</label>
+        <input type="number" id="totalDeposits" value="0" step="any">
+      </div>
+      <div class="control-group">
+        <label for="totalHeldFunds">Total Held Funds</label>
+        <input type="number" id="totalHeldFunds" value="0" step="any">
+      </div>
+      <div class="btn-group">
+        <button id="calculateBtn" class="btn btn-blue">Calculate</button>
+        <button id="clearBtn" class="btn btn-gray">Clear</button>
+        <button id="configBtn" class="btn btn-purple">Market Configs</button>
+      </div>
+    </div>
+
+    <div id="positions"></div>
+    <button id="addPositionBtn" class="btn btn-add">Add Position</button>
+
+    <div id="results"></div>
+  </div>
+
+  <div id="configModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2>Global Market Configuration</h2>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body" id="configModalBody"></div>
+      <div class="modal-footer">
+        <button id="saveConfigBtn" class="btn btn-blue">Save All Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="calculation.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
