@@ -16,23 +16,26 @@ var lastResults = null;
 // BigInt Fixed-Point Arithmetic (scale = 10^8)
 // ============================================================
 
-var SCALE = 100000000n; // 10^8
+var SCALE = 10000000000000000n; // 10^16
+var DECIMALS = 16;
+var DISPLAY_DECIMALS = 8;
+var ZERO_PAD = "0000000000000000"; // 16 zeros
 
-// Parse any value to a scaled BigInt (8 decimal fixed-point)
+// Parse any value to a scaled BigInt (16 decimal fixed-point)
 function BN(v) {
   if (typeof v === "bigint") return v;
   if (v === null || v === undefined || v === "") return 0n;
   var s;
   if (typeof v === "number") {
     if (!isFinite(v)) return 0n;
-    s = v.toFixed(8);
+    s = v.toFixed(DECIMALS);
   } else {
     s = String(v).trim();
   }
   if (s === "" || s === "NaN") return 0n;
   // Handle scientific notation
   if (s.indexOf("e") !== -1 || s.indexOf("E") !== -1) {
-    s = Number(s).toFixed(8);
+    s = Number(s).toFixed(DECIMALS);
   }
   var neg = false;
   if (s.charAt(0) === "-") {
@@ -43,24 +46,24 @@ function BN(v) {
   var whole, frac;
   if (dot === -1) {
     whole = s;
-    frac = "00000000";
+    frac = ZERO_PAD;
   } else {
     whole = s.slice(0, dot) || "0";
-    frac = (s.slice(dot + 1) + "00000000").slice(0, 8);
+    frac = (s.slice(dot + 1) + ZERO_PAD).slice(0, DECIMALS);
   }
   var result = BigInt(whole) * SCALE + BigInt(frac);
   return neg ? -result : result;
 }
 
-// Format a scaled BigInt back to "X.XXXXXXXX" string
+// Format a scaled BigInt back to a display string (8 decimals)
 function bnFmt(v) {
   if (typeof v !== "bigint") return String(v);
   var neg = v < 0n;
   if (neg) v = -v;
   var s = v.toString();
-  while (s.length <= 8) s = "0" + s;
-  var whole = s.slice(0, s.length - 8);
-  var frac = s.slice(s.length - 8);
+  while (s.length <= DECIMALS) s = "0" + s;
+  var whole = s.slice(0, s.length - DECIMALS);
+  var frac = s.slice(s.length - DECIMALS, s.length - DECIMALS + DISPLAY_DECIMALS);
   return (neg ? "-" : "") + whole + "." + frac;
 }
 
