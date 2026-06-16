@@ -6,6 +6,7 @@ var state = {
   positions: [],
   totalDeposits: 0,
   totalHeldFunds: 0,
+  includeFees: false,
 };
 
 // Stores last calculation results for copy-all
@@ -289,6 +290,24 @@ function calculateValues() {
   if (errors.length > 0) {
     alert(errors.join("\n"));
     return;
+  }
+
+  // Auto-compute fees when "Include Fees" is checked
+  if (state.includeFees) {
+    state.positions.forEach(function (pos, idx) {
+      var feeConfig = getFees(state.config, pos.market);
+      var takerRate = feeConfig[0].taker;
+      var openNotional = Math.abs(toNum(pos.quantity)) * toNum(pos.entryPrice);
+      var openFee = -(openNotional * takerRate);
+      pos.realizedOnOpen = openFee;
+
+      if (pos.exitPrice && pos.exitQuantity) {
+        var closeNotional = Math.abs(toNum(pos.exitQuantity)) * toNum(pos.exitPrice);
+        var closeFee = -(closeNotional * takerRate);
+        pos.exitCloseFees = closeFee;
+      }
+    });
+    renderPositions();
   }
 
   // ---- OPEN POSITIONS ----
@@ -1075,6 +1094,13 @@ function bindEvents() {
     .getElementById("totalHeldFunds")
     .addEventListener("input", function (e) {
       state.totalHeldFunds = e.target.value;
+    });
+
+  // Include Fees toggle
+  document
+    .getElementById("includeFees")
+    .addEventListener("change", function (e) {
+      state.includeFees = e.target.checked;
     });
 
   // Calculate

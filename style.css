@@ -21,6 +21,23 @@ body {
 
 .control-group { display: flex; flex-direction: column; gap: 2px; }
 .control-group label { font-size: 12px; color: #A0AEC0; font-weight: 500; }
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #E2E8F0;
+  padding: 6px 0;
+  user-select: none;
+}
+.toggle-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-width: unset;
+  accent-color: #3182CE;
+  cursor: pointer;
+}
 .btn-group { display: flex; gap: 8px; align-items: center; }
 
 select, input[type="number"], input[type="text"] {
